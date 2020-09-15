@@ -6,7 +6,7 @@ const bodyParser = require("body-parser")
 app.use(bodyParser.json())
 
 app.get("/",(req,res)=>{
-    res.write("<h1>You are at the Root of web<br>Endpoints -> /createroom /bookroom</h1>")
+    res.write("<h1>You are at the Root of web<br>Endpoints -> /rooms /createroom /bookroom /bookedrooms /customersrooms</h1>")
 })
 
 let rooms = [];
