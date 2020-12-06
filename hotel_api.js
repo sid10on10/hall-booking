@@ -21,9 +21,9 @@ app.post("/createroom",(req,res)=>{
     let amenities = req.body.amenities
     let price = req.body.price
     let bookedStatus = false
-    let roomName = req.body.name
+    let roomNo = req.body.roomNo
     let roomData = {
-        id,noOfSeats,amenities,price,bookedStatus,roomName
+        id,noOfSeats,amenities,price,bookedStatus,roomNo
     }
     rooms.push(roomData)
     res.json({
@@ -33,6 +33,17 @@ app.post("/createroom",(req,res)=>{
 
 let bookedRooms = []
 
+function unbook(id){
+    let queryRoom = rooms.find((room)=>room.id == id)
+    queryRoom.bookedStatus = false
+}
+
+function clearTime(task){
+    clearTimeout(task)
+}
+
+// start time and end time in js time milliseconds
+
 app.post("/bookroom",(req,res)=>{
     let id  = bookedRooms.length+1
     let customerName = req.body.customerName
@@ -40,15 +51,21 @@ app.post("/bookroom",(req,res)=>{
     let startTime = req.body.startTime
     let endTime = req.body.endTime
     let roomId = req.body.roomId
-    let queryRoom = rooms.find((room)=>room.id == roomId) 
-    let bookedRoomData = {
-        id,customerName,date,startTime,endTime,roomId
+    let queryRoom = rooms.find((room)=>room.id == roomId)
+    if(queryRoom.bookedStatus!=true){
+        let bookedRoomData = {
+            id,customerName,date,startTime,endTime,roomId
+        }
+        bookedRooms.push(bookedRoomData)
+        queryRoom.bookedStatus = true
+        var task = setTimeout(unbook,timeDiff,roomId)
+        setTimeout(clearTime,timeDiff+10,task)
+        res.json({
+            message:"Room is Booked",
+        })
+    }else{
+        res.json({message:"Room is Already booked",})
     }
-    bookedRooms.push(bookedRoomData)
-    queryRoom.bookedStatus = true
-    res.json({
-        message:"Room is Booked",
-    })
 })
 
 app.get("/bookedrooms",(req,res)=>{
