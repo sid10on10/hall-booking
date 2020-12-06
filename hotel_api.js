@@ -52,6 +52,7 @@ app.post("/bookroom",(req,res)=>{
     let endTime = req.body.endTime
     let roomId = req.body.roomId
     let queryRoom = rooms.find((room)=>room.id == roomId)
+    let timeDiff = endTime - startTime
     if(queryRoom.bookedStatus!=true){
         let bookedRoomData = {
             id,customerName,date,startTime,endTime,roomId
